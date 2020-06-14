@@ -35,7 +35,13 @@ window.mapPinCoords = {
   x: mapPinMain.offsetLeft,
   y: mapPinMain.offsetTop
 };
-
+window.firstCoords = function() {
+  var startX = PIN_MAX_X / 2;
+  var startY = PIN_MAX_Y / 2 + 70;
+  var noticeAddress = document.querySelector('#address');
+  noticeAddress.value = startX + ', ' + startY;
+  noticeAddress.setAttribute('disabled', 'true');
+};
 window.setMainPinAdress = function (x, y) {
   window.adressInput.value = x + ', ' + y;
   window.adressInput.setAttribute('disabled', 'true');
