@@ -1,42 +1,100 @@
 'use strict';
 
 var map = document.querySelector('.map');
-// map.classList.remove('map--faded');
 var mapCard = document.querySelector('template').content.querySelector('.map__card');
 var mapPinsBlock = document.querySelector('.map__pins');
 var noticeForm = document.querySelector('.notice__form');
-var noticeFormElements = document.querySelectorAll('.form__element');
+var adressInput = noticeForm.querySelector('#address');
 var mapPin = document.querySelector('template').content.querySelector('.map__pin');
 var mapPinMain = document.querySelector('.map__pin--main');
 var template = document.querySelector('template').content;
-var popupA = document.createDocumentFragment();
 var mapPinImage = document.querySelector('template').content.querySelector('.map__pin').querySelector('img');
-//create link on the empty object
 
+//create link on the empty object
 var fragment = document.createDocumentFragment();
 var featureFragment = document.createDocumentFragment();
 var pictureFragment = document.createDocumentFragment();
 var cardCopy = mapCard.cloneNode(true);
-var isMapPinClicked = false;
-
-var cloneAvatar = mapPinImage.cloneNode(true);
-var mapFilterContainer = document.querySelector('.map__filters-container');
-var mapPinMainPositionX;
-var mapPinMainPositionY;
+var PIN_MIN_X = 300;
+var PIN_MAX_X = 1100;
+var PIN_MIN_Y = 150;
+var PIN_MAX_Y = 600;
 
 //активируем форму по клику
-mapPinMain.addEventListener('mouseup', function(evt) {
+  mapPinMain.addEventListener('mouseup', function(evt) {
   map.classList.remove('map--faded');
   noticeForm.classList.remove('notice__form--disabled');
   mapPinsBlock.appendChild(fragment);
   });
 
+//перемещение главного маркера по карте
+var mapPinMain = document.querySelector('.map__pin--main');
+mapPinMain.querySelector('img').setAttribute('draggable', 'true');
+
+window.mapPinCoords = {
+  x: mapPinMain.offsetLeft,
+  y: mapPinMain.offsetTop
+};
+
+window.setMainPinAdress = function (x, y) {
+  window.adressInput.value = x + ', ' + y;
+  window.adressInput.setAttribute('disabled', 'true');
+};
+
+mapPinMain.addEventListener('mousedown', function (evt) {
+  evt.preventDefault();
+
+var startCoords = {
+  x: evt.clientX,
+  y: evt.clientY
+};
+
+var moveHandler = function (moveEvt) {
+  moveEvt.preventDefault();
+
+var shift = {
+  x: startCoords.x - moveEvt.clientX,
+  y: startCoords.y -  moveEvt.clientY
+};
+
+  startCoords = {
+    x: moveEvt.clientX,
+    y: moveEvt.clientY
+  };
+
+  window.mapPinCoords = {
+  x: mapPinMain.offsetLeft - shift.x,
+  y: mapPinMain.offsetTop - shift.y
+};
+// Ограничим область установки пина
+  if (window.mapPinCoords.x > PIN_MAX_X) {
+    window.mapPinCoords.x = PIN_MAX_X;
+  }
+  if (window.mapPinCoords.y > PIN_MAX_Y) {
+    window.mapPinCoords.y = PIN_MAX_Y;
+  }
+  if (window.mapPinCoords.x < PIN_MIN_X) {
+    window.mapPinCoords.x = PIN_MIN_X;
+  }
+  if (window.mapPinCoords.y < PIN_MIN_Y) {
+    window.mapPinCoords.y = PIN_MIN_Y;
+  }
+
+  mapPinMain.style.left = window.mapPinCoords.x + 'px';
+  mapPinMain.style.top = window.mapPinCoords.y + 'px';
+  window.setMainPinAdress(window.mapPinCoords.x, window.mapPinCoords.y);
+  };
+
+var mouseupHandler = function (upEvt) {
+  upEvt.preventDefault();
+  document.removeEventListener('mousemove', moveHandler);
+  document.removeEventListener('mouseup', mouseupHandler);
+};
+  document.addEventListener('mousemove', moveHandler);
+  document.addEventListener('mouseup', mouseupHandler);
+});
 
 
-
-// cloneImageMapPin.addEventListener('mouseup', function(evt) {
-//   renderCard();
-// });
 var offerType = ['flat', 'house', 'bungalo'];
 var titleList = ['Большая уютная квартира', 'Маленькая неуютная квартира', 'Огромный прекрасный дворец',
   'Маленький ужасный дворец', 'Красивый гостевой домик', 'Некрасивый негостеприимный домик',
@@ -121,7 +179,6 @@ var renderPin = function () {
     cloneMapPin.appendChild(cloneImageMapPin);
     fragment.appendChild(cloneMapPin);
   }
-  // mapPinsBlock.appendChild(fragment);
 };
 renderPin();
 
@@ -158,17 +215,17 @@ var renderCard = function () {
     ' комнаты для ' + adList[0].offer.guests + ' гостей';
   cardCopy.querySelector('h4').nextElementSibling.nextElementSibling.textContent = 'Заезд после ' + adList[0].offer.checkin + ' выезд до ' + adList[0].offer.checkout;
 
-  var renderPictures = function () {
-    for (var i = 0; i < adList[0].offer.photos.length; i++) {
-      var picturesList = document.createElement('li');
-      var picturesImgTag = document.createElement('img');
-      picturesImgTag.src = adList[0].offer.photos[i];
-      picturesList.appendChild(picturesImgTag);
-      pictureFragment.appendChild(picturesList);
-    }
-    cardCopy.querySelector('.popup__pictures').innerHTML = '';
-    cardCopy.querySelector('.popup__pictures').appendChild(pictureFragment);
-  };
+var renderPictures = function () {
+  for (var i = 0; i < adList[0].offer.photos.length; i++) {
+    var picturesList = document.createElement('li');
+    var picturesImgTag = document.createElement('img');
+    picturesImgTag.src = adList[0].offer.photos[i];
+    picturesList.appendChild(picturesImgTag);
+    pictureFragment.appendChild(picturesList);
+  }
+  cardCopy.querySelector('.popup__pictures').innerHTML = '';
+  cardCopy.querySelector('.popup__pictures').appendChild(pictureFragment);
+};
   renderPictures();
 
   var renderAvatar = function () {
