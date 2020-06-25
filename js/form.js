@@ -27,12 +27,12 @@ window.activateMainPin = function() {
     }
     setMainPinAddress();
     window.setupPins();
+
     mainPin.removeEventListener('mouseup', mainPinMouseupHandler);
   };
   mainPin.addEventListener('mouseup', mainPinMouseupHandler);
   mainPin.addEventListener('keydown', function (evt) {
-    window.isEnterEvent(evt, mainPinMouseupHandler);
+  window.isEnterEvent(evt, mainPinMouseupHandler);
   });
 };
-
 })();

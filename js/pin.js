@@ -10,7 +10,7 @@ window.renderPins = function (renderingOffer) {
   pinIcon.querySelector('img').src = renderingOffer.author.avatar;
   pinIcon.style.left = (renderingOffer.location.x + pinWidth / 2) + 'px';
   pinIcon.style.top = (renderingOffer.location.y + pinHeight) + 'px';
-  pinIcon.addEventListener('click', window.pinIconClickHandler);
+  pinIcon.addEventListener('click', pinIconClickHandler);
   return pinIcon;
 };
 })();

@@ -7,7 +7,7 @@
   var ENTER_KEYCODE = 13;
 
   var offersArray = window.generateOffers();
-  var closePopup = document.querySelector('.popup__close');
+  // var closePopup = document.querySelector('.popup__close');
   var popTemplate = document.querySelector('template').content;
   var popTemp = popTemplate.cloneNode(true);
   var popElement = popTemp.querySelector('.map__card');
@@ -56,6 +56,17 @@
   }
   popElement.querySelectorAll('p')[4].textContent = renderingOffer.offer.description;
   var photosElement = popElement.querySelector('.popup__pictures');
+  
+
+
+//////
+  if (renderingOffer.offer.photos.length > 3) {
+    renderingOffer.offer.photos.length = 3; // обрезаем лишние фото
+  }
+
+///////
+
+
   for (m = 0; m < renderingOffer.offer.photos.length; m++) {
     var li = photosElement.querySelector('li').cloneNode(true);
     li.querySelector('img').src = renderingOffer.offer.photos[m];
@@ -66,7 +77,8 @@
   photosElement.querySelector('li').remove(); // удалить первый шаблонный элемент
   return popElement;
 };
-var closePopup = function() {
+
+window.closePopup = function() {
   var similarListElement = document.querySelector('.map__pins');
   var articles = similarListElement.querySelector('article');
   if (articles) {
@@ -83,17 +95,17 @@ window.pinIconClickHandler = function (evt) {
   var num = (noticeImg[noticeImg.length - 5] - 1);
   var fragment = document.createDocumentFragment();
   var similarListElement = document.querySelector('.map__pins');
-  // closePopup();
+  window.closePopup();
   fragment.appendChild(renderPopup(offersArray[num]));
   similarListElement.appendChild(fragment);
 
   var closeButton = document.querySelector('.map__pins').querySelector('.popup__close');
-  closeButton.addEventListener('click', closePopup);
+  closeButton.addEventListener('click', window.closePopup);
   closeButton.addEventListener('keydown', function (evtEnter) {
-    window.isEnterEvent(evtEnter, closePopup);
+    window.isEnterEvent(evtEnter, window.closePopup);
   });
   document.addEventListener('keydown', function (evtEsc) {
-    window.isEscEvent(evtEsc, closePopup);
+    window.isEscEvent(evtEsc, window.closePopup);
   });
 };
 
@@ -107,6 +119,5 @@ window.setupPins = function () {
   }
   similarListElement.appendChild(fragment);
 };
-
 
 })();

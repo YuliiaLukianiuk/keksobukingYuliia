@@ -71,5 +71,14 @@ var PIN_MAX_Y = 600;
       document.addEventListener('mousemove', window.moveHandler);
       document.addEventListener('mouseup', mouseupHandler);
     });
-    
+
+
+//   var offersArray;
+// // Загрузить похожие объявления
+// var getOffers = function (data) {
+//   offersArray = data;
+// };
+
+
+// window.download(getOffers, window.errorHandler);
     })();
