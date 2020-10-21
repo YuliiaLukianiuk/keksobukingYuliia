@@ -3,33 +3,20 @@
   //card
   window.POPUP_WIDTH = 230;
   window.POPUP_MARGIN = 10;
-  var ESC_KEYCODE = 27;
-  var ENTER_KEYCODE = 13;
+  window.offersArray = window.generateOffers();
 
-  var offersArray = window.generateOffers();
   // var closePopup = document.querySelector('.popup__close');
   var popTemplate = document.querySelector('template').content;
   var popTemp = popTemplate.cloneNode(true);
   var popElement = popTemp.querySelector('.map__card');
   
-  var renderPopup = function (renderingOffer) {
+  window.renderPopup = function (renderingOffer) {
   popElement.querySelector('.popup__avatar').src = renderingOffer.author.avatar;
   popElement.querySelector('h3').textContent = renderingOffer.offer.title;
   popElement.querySelector('small').textContent = renderingOffer.offer.address;
   popElement.querySelector('.popup__price').textContent = renderingOffer.offer.price + ' \u20bd/ночь';
   popElement.querySelectorAll('p').textContent = renderingOffer.offer.photos;
 
-  window.isEscEvent = function (evt, action) {
-    if (evt.keyCode === ESC_KEYCODE) {
-      action();
-    }
-  };
-
-  window.isEnterEvent = function (evt, action) {
-    if (evt.keyCode === ENTER_KEYCODE) {
-      action();
-    }
-  };
 
   var getRuType = function (type) {
     if (type === 'flat') {
@@ -46,6 +33,18 @@
   elemStr = 'Заезд после ' + renderingOffer.offer.checkin + ', выезд до ' + renderingOffer.offer.checkout;
   popElement.querySelectorAll('p')[3].textContent = elemStr;
 
+
+  // window.cardTemplate = document.querySelector('#card').content.querySelector('.map__card');
+  // var cardItem = window.cardTemplate.cloneNode(true);
+  // var cardFeatures = cardItem.querySelector('.popup__features');
+  //     if (renderingOffer.offer.features.length === 0) {
+  //       cardFeatures.remove();
+  //     }
+  //     cardFeatures.innerHTML = '';
+  //     cardFeatures.appendChild(createFragmentFeatures(renderingOffer.offer.features));
+  //     cardItem.querySelector('.popup__description').textContent = renderingOffer.offer.description;
+     
+
   var featuresElement = popElement.querySelector('.popup__features');
   popElement.querySelectorAll('p')[4].textContent = renderingOffer.offer.description;
 
@@ -61,77 +60,40 @@
   }
 
 
-  
+  window.photosElement = popElement.querySelector('.popup__pictures');
+  // popElement.querySelectorAll('li').textContent = renderingOffer.offer.photos.length;
 
-  var photosElement = popElement.querySelector('.popup__pictures');
-  popElement.querySelectorAll('p').textContent = renderingOffer.offer.photos.length;
+ var changeRhoto = [];
 
  
- 
-  if (renderingOffer.offer.photos.length > 3) {
-    renderingOffer.offer.photos.length = 3; // обрезаем лишние фото
-  }
 
   for (m = 0; m < renderingOffer.offer.photos.length; m++) {
   
     var li = photosElement.querySelector('li').cloneNode(true);
+    changeRhoto[m] = renderingOffer.offer.photos[m];
     li.querySelector('img').src = renderingOffer.offer.photos[m];
     li.querySelector('img').width = '40';
     li.querySelector('img').height = '40';
-
     photosElement.append(li);
 
+//   function unique(photosElement) {
+//   return Array.from(new Set(photosElement));
+// }
+// unique();
   }
   photosElement.querySelector('li').remove(); // удалить первый шаблонный элемент
-
+// var photoChange = document.querySelector('.map__pin');
+// photoChange.addEventListener('change', function() {
+//   window.photosElement.remove();
+// });
   return popElement;
+
+    
 };
 
 
 
 
 
-//то что было
-window.closePopup = function() {
-  var similarListElement = document.querySelector('.map__pins');
-  var articles = similarListElement.querySelector('article');
-  if (articles) {
-    similarListElement.removeChild(articles);
-  }
-};
-
-// Обработчик клика по пину похожего объявления
-window.pinIconClickHandler = function (evt) {
-  var targetPin = evt.target;
-  // Проверка нужна для того, чтобы клик адекватно работал на всём пине
-  var noticeImg = targetPin.firstChild ? targetPin.firstChild.src : targetPin.src;
-  noticeImg.toString();
-  var num = (noticeImg[noticeImg.length - 5] - 1);
-  var fragment = document.createDocumentFragment();
-  var similarListElement = document.querySelector('.map__pins');
-  window.closePopup();
-  fragment.appendChild(renderPopup(offersArray[num]));
-  similarListElement.appendChild(fragment);
-
-  var closeButton = document.querySelector('.map__pins').querySelector('.popup__close');
-  closeButton.addEventListener('click', window.closePopup);
-  closeButton.addEventListener('keydown', function (evtEnter) {
-    window.isEnterEvent(evtEnter, window.closePopup);
-  });
-  document.addEventListener('keydown', function (evtEsc) {
-    window.isEscEvent(evtEsc, window.closePopup);
-  });
-};
-
-
-// Установка пинов похожих объявлений по карте
-window.setupPins = function () {
-  var fragment = document.createDocumentFragment();
-  var similarListElement = document.querySelector('.map__pins');
-  for (var n = 0; n < offersArray.length; n++) {
-    fragment.appendChild(window.renderPins(offersArray[n]));
-  }
-  similarListElement.appendChild(fragment);
-};
 
 })();

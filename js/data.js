@@ -15,7 +15,7 @@ var ROOMS = {
   MIN: 1,
   MAX: 5
 };
-var PHOTO = ['http://o0.github.io/assets/images/tokyo/hotel1.jpg',
+window.PHOTO = ['http://o0.github.io/assets/images/tokyo/hotel1.jpg',
              'http://o0.github.io/assets/images/tokyo/hotel2.jpg',
              'http://o0.github.io/assets/images/tokyo/hotel3.jpg'];
 var MAX_GUEST = 10;
