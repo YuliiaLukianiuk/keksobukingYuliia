@@ -15,7 +15,6 @@
   popElement.querySelector('h3').textContent = renderingOffer.offer.title;
   popElement.querySelector('small').textContent = renderingOffer.offer.address;
   popElement.querySelector('.popup__price').textContent = renderingOffer.offer.price + ' \u20bd/ночь';
-  popElement.querySelectorAll('p').textContent = renderingOffer.offer.photos;
 
 
   var getRuType = function (type) {
@@ -61,39 +60,19 @@
 
 
   window.photosElement = popElement.querySelector('.popup__pictures');
-  // popElement.querySelectorAll('li').textContent = renderingOffer.offer.photos.length;
-
- var changeRhoto = [];
-
- 
 
   for (m = 0; m < renderingOffer.offer.photos.length; m++) {
-  
+  if(m===3) {
+    break;
+  }
     var li = photosElement.querySelector('li').cloneNode(true);
-    changeRhoto[m] = renderingOffer.offer.photos[m];
     li.querySelector('img').src = renderingOffer.offer.photos[m];
     li.querySelector('img').width = '40';
     li.querySelector('img').height = '40';
     photosElement.append(li);
 
-//   function unique(photosElement) {
-//   return Array.from(new Set(photosElement));
-// }
-// unique();
   }
   photosElement.querySelector('li').remove(); // удалить первый шаблонный элемент
-// var photoChange = document.querySelector('.map__pin');
-// photoChange.addEventListener('change', function() {
-//   window.photosElement.remove();
-// });
   return popElement;
-
-    
 };
-
-
-
-
-
-
 })();
